@@ -2,9 +2,8 @@ package com.sam.killtivolauncher;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
@@ -28,15 +27,16 @@ public class MainActivity extends Activity {
     }
 
     private void initView() {
-        Button kill = findViewById(R.id.kill);
-        Button restart = findViewById(R.id.star);
-        kill.requestFocus();
 
-        kill.setOnClickListener(v -> {
-            killBackgroundProcess(LAUNCHER_PACKAGE_NAME);
-        });
-        restart.setOnClickListener(v -> {
+        Button star = findViewById(R.id.star);
+        Button kill = findViewById(R.id.kill);
+        star.requestFocus();
+
+        star.setOnClickListener(v -> {
             launchApp(STAR_FIRE_PACKAGE_NAME);
+        });
+        kill.setOnClickListener(v -> {
+            appDetails(LAUNCHER_PACKAGE_NAME);
         });
     }
 
@@ -45,6 +45,13 @@ public class MainActivity extends Activity {
         if (activityManager != null) {
             activityManager.killBackgroundProcesses(packageName);
         }
+    }
+
+    private void appDetails(String packageName) {
+        Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setData(Uri.parse("package:" + packageName));
+        startActivity(intent);
     }
 
     private void launchApp(String packageName) {
